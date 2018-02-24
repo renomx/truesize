@@ -7,7 +7,6 @@ type Shoe struct {
 }
 
 
-
 func (s *Shoe) getShoes(db *sql.DB) ([]Shoe, error) {
 	return errors.New("not implemented")
 }
