@@ -6,7 +6,7 @@ import (
     "net/http"
     "fmt"
 
-    "gitlab.com/reneamontes/truesize/config"
+    "github.com/reneamontes/truesize/config"
 
     "github.com/gorilla/mux"
     _ "github.com/lib/pq"
