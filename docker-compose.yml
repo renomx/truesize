@@ -1,0 +1,22 @@
+store:
+    image: postgres:latest 
+    volumes:
+        - /var/lib/postgresql/data
+    command: "true"
+
+database:
+    image: postgres:latest
+    ports:
+        - "5432" 
+    volumes_from:
+        - store 
+    environment:
+        - POSTGRES_PASSWORD=cumbaya
+       
+
+go:
+    build: .
+    links:
+        - database:db 
+    ports:
+        - "8080"
