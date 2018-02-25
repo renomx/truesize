@@ -1,6 +1,12 @@
-package model
+package models
 
-import "log"
+import (
+    "database/sql"
+    "errors"
+    "log"
+
+    _ "github.com/lib/pq"
+)
 
 type Shoe struct {
 	Id     int     
@@ -9,11 +15,11 @@ type Shoe struct {
 }
 
 
-func InitModel(db *sql.DB) error {
+func (s *Shoe) InitModel(db *sql.DB) error {
     
     qs := []string {
     "CREATE DATABASE truesize",
-    "CREATE TABLE IF NOT EXISTS shoes (id serial, name text, sizes integer[])"
+    "CREATE TABLE IF NOT EXISTS shoes (id serial, name text, sizes integer[])",
     }
 
     for _, q := range qs {
@@ -28,23 +34,15 @@ func InitModel(db *sql.DB) error {
 
 
 func (s *Shoe) getShoes(db *sql.DB) ([]Shoe, error) {
-	err := db.Model(&Shoe)
-    Column("shoe.*", "Sizes")
-    Relation("Sizes", func(q *orm.Query) (*orm.Query, error) {
-        return q, nil
-    })
-
-    if(err != nil) {
-        panic(err)
-    }
+	return nil, errors.New("not implemented")
 }
 
 func (s *Shoe) getShoe(db *sql.DB) error {
-
+    return errors.New("not implemented")
 }
 
-func (s *Shoe) createShoe(db *sql.DB) error {
-
+func (s *Shoe) CreateShoe(db *sql.DB) error {
+ 
     log.Println(s)
 
 
@@ -67,11 +65,11 @@ func (s *Shoe) createShoe(db *sql.DB) error {
     return nil
 }
 
-func (s *Show) addTrueToSize(db *sql.DB) error {
+func (s *Shoe) addTrueToSize(db *sql.DB) error {
 	return errors.New("not implemented")
 }
 
 
-func (s *Show) deleteShoe(db *sql.DB) error {
-
+func (s *Shoe) deleteShoe(db *sql.DB) error {
+    return errors.New("not implemented")
 }

@@ -18,6 +18,7 @@ type App struct {
 	Config *config.Config
     Router *mux.Router
     DB     *sql.DB
+    Model  *models.Shoe
 }
 
 func (a *App) SetConfig() {
@@ -35,6 +36,8 @@ func (a *App) Initialize(host, user, password, dbname string) {
     }
     defer a.DB.Close()
 
+    a.Model.InitModel(a.DB)
+
     a.Router = mux.NewRouter()
     a.initializeRoutes()    
 }
@@ -48,7 +51,7 @@ func (a *App) initializeRoutes() {
     */
 
     a.Router.HandleFunc("/", a.sayHello).Methods("GET")
-    a.Router.HandleFunc("/createshoe", a.CreateShoe).Methods("GET")
+    a.Router.HandleFunc("/createshoe", a.createShoe).Methods("POST")
     log.Println("Initializing routes")
 }
 
@@ -87,14 +90,16 @@ func (a *App) sayHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) createShoe(w http.ResponseWriter, r *http.Request) {
-    shoe := models.shoe
+    
+
+    /*shoe := model.Shoe
 
 
-    if err := models.createShoe(a.DB); err != nil {
+    if err := model.CreateShoe(a.DB); err != nil {
         respondWithError(w, http.StatusInternalServerError, err.Error())
         return
     }
 
-    respondWithJSON(w, http.StatusCreated, p)
+    respondWithJSON(w, http.StatusCreated, shoe)*/
     
 }
