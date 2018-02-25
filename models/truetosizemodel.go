@@ -20,7 +20,7 @@ func (s *Shoe) InitModel(db *sql.DB) error {
     // Add initialization scripts as necesary
     qs := []string {
     "CREATE TABLE IF NOT EXISTS shoes (id serial, name text, sizes integer[])",
-    "INSERT INTO shoes ('Adidas 1', '{1,4,3,2,5,2}')",
+    "INSERT INTO shoes VALUES ('Adidas 1', '{1,4,3,2,5,2}')",
     }
 
     for _, q := range qs {
