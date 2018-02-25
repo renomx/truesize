@@ -1,7 +1,7 @@
 {
 	"local": {
 		"driver": "postgres",
-		"host": "database",
+		"host": "postgresdb",
 		"user": "postgress",
 		"password": "cumbaya",
 		"dbname": "truesize",
@@ -9,7 +9,7 @@
 	},
 	"tests": {
 		"driver": "postgres",
-		"host": "database",
+		"host": "postgresdb",
 		"user": "postgress",
 		"password": "cumbaya",
 		"dbname": "truesize_test",
