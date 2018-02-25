@@ -4,7 +4,7 @@ store:
         - /var/lib/postgresql/data
     command: "true"
 
-database:
+postgresdb:
     image: postgres:latest
     ports:
         - "5432" 
@@ -15,8 +15,8 @@ database:
        
 
 go:
-    build: .
+    build: .    
     links:
-        - database:db 
+        - postgresdb
     ports:
         - "8080:8080"
