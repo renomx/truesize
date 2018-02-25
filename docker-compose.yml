@@ -14,7 +14,7 @@ postgresdb:
         - POSTGRES_PASSWORD=cumbaya      
 
 go:
-    build: ./docker/golang   
+    build: .
     links:
         - postgresdb
     ports:
