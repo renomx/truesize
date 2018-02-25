@@ -9,12 +9,13 @@ type Shoe struct {
 }
 
 
-qs := []string {
-    "CREATE DATABASE truesize"
-    "CREATE TABLE IF NOT EXISTS shoes (id serial, name text, sizes integer[])",
-}
-
 func InitModel(db *sql.DB) error {
+    
+    qs := []string {
+    "CREATE DATABASE truesize",
+    "CREATE TABLE IF NOT EXISTS shoes (id serial, name text, sizes integer[])"
+    }
+
     for _, q := range qs {
         _, err := db.Exec(q)
         if err != nil {
