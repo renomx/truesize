@@ -27,7 +27,7 @@ func (a *App) SetConfig() {
 
 func (a *App) Initialize(host, user, password, dbname string) {
     connectionString :=
-        fmt.Sprintf("host=%s user=%s password=%s dbname=%s", host, user, password, dbname)
+        fmt.Sprintf("host=%s user=%s password=%s dbname=%s  sslmode=disable", host, user, password, dbname)
 
     log.Println(connectionString)
 

@@ -6,7 +6,6 @@ store:
 
 postgresdb:
     build: ./docker/postgres
-    image: postgres:latest
     ports:
         - "5432" 
     volumes_from:
