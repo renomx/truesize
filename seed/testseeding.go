@@ -1,6 +1,6 @@
 package seed
 
-import "github.com/reneamontes/truesize/main"
+import "github.com/renomx/truesize/main"
 
 const databaseCreation = "CREATE DATABASE truesize_test"
 

@@ -1,16 +1,15 @@
 package main
 
-import (
-	"log"
-)
-
 func main() {
 	// Initialize App
 	a := App{}
 	a.SetConfig()
 
-	log.Println(a.Config.Local.Host)
-    //a.Initialize(c.Host, c.User, c.Password, c.DbName)
+    a.Initialize(
+    	a.Config.Local.Host, 
+    	a.Config.Local.User, 
+    	a.Config.Local.Password, 
+    	a.Config.Local.DbName)
 
-    a.Run(":8080")
+    a.Run(a.Config.Local.ApiPort)
 }

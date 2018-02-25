@@ -10,16 +10,17 @@ import (
 /** CONFIG MODEL **/
 
 type Config struct {
-	Local DbConfig
-	Tests DbConfig
+	Local EnvConfig
+	Tests EnvConfig
 }
 
-type DbConfig struct {
+type EnvConfig struct {
 	Driver    string
 	Host      string
 	User      string
 	Password  string
 	DbName	  string
+	ApiPort   string
 }
 
 

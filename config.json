@@ -4,13 +4,15 @@
 		"host": "database",
 		"user": "postgress",
 		"password": "cumbaya",
-		"dbname": "truesize"
+		"dbname": "truesize",
+		"apiport": ":8080"
 	},
 	"tests": {
 		"driver": "postgres",
 		"host": "database",
 		"user": "postgress",
 		"password": "cumbaya",
-		"dbname": "truesize_test"
+		"dbname": "truesize_test",
+		"apiport": ":8081"
 	}
 }
