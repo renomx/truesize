@@ -93,6 +93,7 @@ func (a *App) sayHello(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) createShoe(w http.ResponseWriter, r *http.Request) {
     
+    log.Println(a.Model.truetosizemodoel)
 
     /*shoe := model.Shoe
 
