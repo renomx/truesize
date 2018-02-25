@@ -5,6 +5,7 @@ store:
     command: "true"
 
 postgresdb:
+    build: ./docker/postgres
     image: postgres:latest
     ports:
         - "5432" 
@@ -14,7 +15,7 @@ postgresdb:
         - POSTGRES_PASSWORD=cumbaya      
 
 go:
-    build: .    
+    build: ./docker/golang   
     links:
         - postgresdb
     ports:
