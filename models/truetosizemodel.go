@@ -20,6 +20,7 @@ func (s *Shoe) InitModel(db *sql.DB) error {
     // Add initialization scripts as necesary
     qs := []string {
     "CREATE TABLE IF NOT EXISTS shoes (id serial, name text, sizes integer[])",
+    "INSERT INTO shoes ('Adidas 1', '{1,4,3,2,5,2}')",
     }
 
     for _, q := range qs {
@@ -35,8 +36,28 @@ func (s *Shoe) InitModel(db *sql.DB) error {
 }
 
 
-func (s *Shoe) getShoes(db *sql.DB) ([]Shoe, error) {
-	return nil, errors.New("not implemented")
+func (s *Shoe) GetShoes(db *sql.DB, start, count int) ([]Shoe, error) {
+	  rows, err := db.Query(
+        "SELECT id, name, sizes FROM shoes LIMIT $1 OFFSET $2",
+        count, start)
+
+    if err != nil {
+        return nil, err
+    }
+
+    defer rows.Close()
+
+    shoes := []Shoe{}
+
+    for rows.Next() {
+        var s Shoe
+        if err := rows.Scan(&s.Id, &s.Name, &s.Sizes); err != nil {
+            return nil, err
+        }
+        shoes = append(shoes, s)
+    }
+
+    return shoes, nil
 }
 
 func (s *Shoe) getShoe(db *sql.DB) error {
@@ -45,7 +66,7 @@ func (s *Shoe) getShoe(db *sql.DB) error {
 
 func (s *Shoe) CreateShoe(db *sql.DB) error {
  
-    log.Println(s)
+    
 
 
 	/*err := db.QueryRow(

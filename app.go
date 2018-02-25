@@ -1,10 +1,11 @@
 package main
 
 import (
-    "database/sql"
-    "log"
-    "net/http"
     "fmt"
+    "log"
+    "strconv"
+    "net/http"
+    "database/sql"   
     "encoding/json"
 
     "github.com/renomx/truesize/config"
@@ -45,15 +46,9 @@ func (a *App) Initialize(host, user, password, dbname string) {
 }
 
 func (a *App) initializeRoutes() {
-    /*a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
-    a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
-    a.Router.HandleFunc("/product/{id:[0-9]+}", a.getProduct).Methods("GET")
-    a.Router.HandleFunc("/product/{id:[0-9]+}", a.updateProduct).Methods("PUT")
-    a.Router.HandleFunc("/product/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
-    */
 
     a.Router.HandleFunc("/", a.sayHello).Methods("GET")
-    a.Router.HandleFunc("/createshoe", a.createShoe).Methods("POST")
+    a.Router.HandleFunc("/shoe", a.getShoes).Methods("GET")
     log.Println("Initializing routes")
 }
 
@@ -91,18 +86,24 @@ func (a *App) sayHello(w http.ResponseWriter, r *http.Request) {
     respondWithJSON(w, http.StatusOK, anonymousStruct)
 }
 
-func (a *App) createShoe(w http.ResponseWriter, r *http.Request) {
+func (a *App) getShoes(w http.ResponseWriter, r *http.Request) {
     
-    log.Println(a.Model)
+    count, _ := strconv.Atoi(r.FormValue("count"))
+    start, _ := strconv.Atoi(r.FormValue("start"))
 
-    /*shoe := model.Shoe
+    if count > 10 || count < 1 {
+        count = 10
+    }
+    if start < 0 {
+        start = 0
+    }
 
-
-    if err := model.CreateShoe(a.DB); err != nil {
+    shoes, err := a.Model.GetShoes(a.DB, start, count)
+    if err != nil {
         respondWithError(w, http.StatusInternalServerError, err.Error())
         return
     }
 
-    respondWithJSON(w, http.StatusCreated, shoe)*/
+    respondWithJSON(w, http.StatusOK, shoes)
     
 }
