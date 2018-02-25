@@ -17,7 +17,7 @@ type Shoe struct {
 
 func (s *Shoe) InitModel(db *sql.DB) error {
     
-    /*qs := []string {
+    qs := []string {
     "CREATE DATABASE truesize",
     "CREATE TABLE IF NOT EXISTS shoes (id serial, name text, sizes integer[])",
     }
@@ -29,9 +29,8 @@ func (s *Shoe) InitModel(db *sql.DB) error {
             return err
         }
     }
-    return nil*/
 
-    log.Println("Initializing DB")
+    log.Println("DB Initialized")
     return nil
 }
 

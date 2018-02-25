@@ -11,8 +11,7 @@ postgresdb:
     volumes_from:
         - store 
     environment:
-        - POSTGRES_PASSWORD=cumbaya
-       
+        - POSTGRES_PASSWORD=cumbaya      
 
 go:
     build: .    
@@ -20,3 +19,11 @@ go:
         - postgresdb
     ports:
         - "8080:8080"
+
+admin:
+    image: adminer
+    restart: always
+    links: 
+        - postgresdb
+    ports:
+        - 8081:8080
