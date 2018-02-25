@@ -13,6 +13,6 @@
 		"user": "postgress",
 		"password": "cumbaya",
 		"dbname": "truesize_test",
-		"apiport": ":8081"
+		"apiport": ":8080"
 	}
 }
