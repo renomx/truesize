@@ -5,13 +5,14 @@ store:
     command: "true"
 
 postgresdb:
-    build: ./docker/postgres
+    image: postgres:latest
     ports:
         - "5432" 
     volumes_from:
         - store 
     environment:
-        - POSTGRES_PASSWORD=cumbaya      
+        - POSTGRES_PASSWORD=cumbaya
+        - POSTGRES_DB=truesize      
 
 go:
     build: .

@@ -2,7 +2,7 @@
 	"local": {
 		"driver": "postgres",
 		"host": "postgresdb",
-		"user": "postgress",
+		"user": "postgres",
 		"password": "cumbaya",
 		"dbname": "truesize",
 		"apiport": ":8080"
@@ -10,7 +10,7 @@
 	"tests": {
 		"driver": "postgres",
 		"host": "postgresdb",
-		"user": "postgress",
+		"user": "postgres",
 		"password": "cumbaya",
 		"dbname": "truesize_test",
 		"apiport": ":8080"
