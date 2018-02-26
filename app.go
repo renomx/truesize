@@ -32,7 +32,7 @@ func (a *App) SetConfig() {
 
 func (a *App) Initialize(host, port, user, password, dbname string) {
     connectionString :=
-        fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", 
+        fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", 
             host, port, user, password, dbname)   
 
     var err error
