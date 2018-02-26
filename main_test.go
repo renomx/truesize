@@ -10,7 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"."
+	"github.com/renomx/truesize"
+
 )
 
 var (

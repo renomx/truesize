@@ -14,7 +14,7 @@
 		"user": "truesizeuser",
 		"password": "cumbaya",
 		"dbname": "truesize_test",
-		"dbport": "5434",
+		"dbport": "5432",
 		"apiport": ":8080"
 	}
 }
