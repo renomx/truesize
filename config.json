@@ -15,6 +15,6 @@
 		"password": "cumbaya",
 		"dbname": "truesize_test",
 		"dbport": "5432",
-		"apiport": ":8082"
+		"apiport": ":8083"
 	}
 }
