@@ -1,98 +1,142 @@
 package models
 
 import (
-    "database/sql"
-    "errors"
     "log"
+    "errors"
 
     _ "github.com/lib/pq"
+    "github.com/jinzhu/gorm"
 )
 
+type SimpleShoe struct {
+    Id         int      `json:"id"`
+    Name       string   `json:"name"`
+    Sizes      []int    `json:"sizes"`
+    TrueToSize float64  `json:"truetosize"`  
+}
+
 type Shoe struct {
-	Id     int     
-	Name   string  
-	Sizes  []int
+    gorm.Model      
+	Name       string   
+    TrueToSize float64  `sql:"type:decimal(14,13);"`
+	Sizes      []Size
+}
+
+type Size struct {
+    gorm.Model        
+    Size      int     
+    ShoeID    int     
 }
 
 
-func (s *Shoe) InitModel(db *sql.DB) error {
-    
-    // Add initialization scripts as necesary
-    qs := []string {
-    "CREATE TABLE IF NOT EXISTS shoes (id serial not null primary key, name text, sizes integer[])",
-    "INSERT INTO shoes VALUES ('Adidas 1', '{1,4,3,2,5,2}')",
-    }
+func (s *Shoe) InitModel(db *gorm.DB) error {
 
-    for _, q := range qs {
-        _, err := db.Exec(q)
-        if err != nil {
-            panic(err)
-            return err
-        }
-    }
+    db.DropTableIfExists(&Shoe{}, &Size{})
+
+    db.AutoMigrate(&Shoe{}, &Size{})
 
     log.Println("DB Initialized")
+
     return nil
 }
 
 
-func (s *Shoe) GetShoes(db *sql.DB, start, count int) ([]Shoe, error) {
-	  rows, err := db.Query(
-        "SELECT id, name, sizes FROM shoes LIMIT $1 OFFSET $2",
-        count, start)
-
-    if err != nil {
-        return nil, err
-    }
-
-    defer rows.Close()
-
+func (s *Shoe) GetShoes(db *gorm.DB) ([]SimpleShoe, error) {
+	
+    simpleShoes := []SimpleShoe{}
     shoes := []Shoe{}
+    db.Find(&shoes)
+    for _,s := range shoes {        
+        simpleShoes = append(simpleShoes, mapToSimpleShoe(db, int(s.ID)))
 
-    for rows.Next() {
-        var s Shoe
-        if err := rows.Scan(&s.Id, &s.Name, &s.Sizes); err != nil {
-            return nil, err
-        }
-        shoes = append(shoes, s)
     }
-
-    return shoes, nil
+    return simpleShoes, nil
 }
 
-func (s *Shoe) getShoe(db *sql.DB) error {
-    return errors.New("not implemented")
-}
+func (s *Shoe) GetShoe(db *gorm.DB, id int) (SimpleShoe, error) {
 
-func (s *Shoe) CreateShoe(db *sql.DB) error {
+    return mapToSimpleShoe(db, id), nil
+}   
+
+func (s *SimpleShoe) CreateShoe(db *gorm.DB) (SimpleShoe, error) {
  
-    
-
-
-	/*err := db.QueryRow(
-        "INSERT INTO shoes(name) VALUES($1) RETURNING id",
-        s.Name).Scan(&s.Id)
-
-    if err != nil {
-        return err
+    shoe := Shoe {
+        Name: s.Name,
     }
 
-    i := 0
-    for range s.TrueToSizeData {
-    	err := db.QueryRow(
-    		"INSERT INTO sizes(shoe_id, size) VALUES($1,$2) RETURNING id",
-    		s.Id, s.TrueToSizeData[i])
-    }*/
+    for _, element := range s.Sizes {
+        size := Size { 
+            Size: element, 
+        }
+        shoe.Sizes = append(shoe.Sizes, size)
+    }
 
+   
+   db.Create(&shoe)
 
-    return nil
+   return mapToSimpleShoe(db, int(shoe.ID)),nil
 }
 
-func (s *Shoe) addTrueToSize(db *sql.DB) error {
-	return errors.New("not implemented")
+
+func (s *Shoe) AddTrueToSize(db *gorm.DB, shoeName string, size int) (SimpleShoe, error) {
+	
+    shoe := Shoe{}
+    db.Where("name = ?", shoeName).Find(&shoe)
+
+    newSize := Size{
+        Size: size,
+        ShoeID: int(shoe.ID),
+    }
+
+    db.Create(&newSize)
+
+    simpleShoe := mapToSimpleShoe(db, int(shoe.ID))
+
+    shoe.TrueToSize = simpleShoe.TrueToSize
+
+    db.Save(&shoe)
+
+    return simpleShoe, nil
 }
 
 
-func (s *Shoe) deleteShoe(db *sql.DB) error {
+func (s *Shoe) deleteShoe(db *gorm.DB) error {
     return errors.New("not implemented")
 }
+
+func (s *Shoe) calculateTrueToSize(db *gorm.DB) error {
+    return errors.New("not implemented")
+}
+
+
+func mapToSimpleShoe(db *gorm.DB, id int) SimpleShoe {
+
+    simpleShoe := SimpleShoe{}
+    shoe := Shoe{}
+
+    db.Where("id = ?", id).Find(&shoe)   
+
+    sizes := []Size{}
+    db.Find(&sizes).Where("shoe_id = ?", id)
+
+    total := float64(len(sizes))
+    count := 0
+
+    for _,item := range sizes {
+        if(item.ShoeID == id) {
+            simpleShoe.Sizes = append(simpleShoe.Sizes, item.Size)
+            count += item.Size
+        }        
+    }
+
+    simpleShoe.Id = id
+    simpleShoe.Name = shoe.Name
+    simpleShoe.TrueToSize = float64(count)/total
+
+    log.Println("Map to simple shoe")
+    log.Println(simpleShoe.TrueToSize)
+
+    return simpleShoe
+    
+}
+

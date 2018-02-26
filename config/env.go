@@ -20,6 +20,7 @@ type EnvConfig struct {
 	User      string
 	Password  string
 	DbName	  string
+	DbPort    string
 	ApiPort   string
 }
 

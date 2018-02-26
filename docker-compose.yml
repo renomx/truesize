@@ -12,7 +12,17 @@ postgresdb:
         - store 
     environment:
         - POSTGRES_PASSWORD=cumbaya
-        - POSTGRES_DB=truesize      
+        - POSTGRES_DB=truesize  
+
+postgresdbtest:
+    image: postgres:latest
+    ports:
+        - "5433:5432" 
+    volumes_from:
+        - store 
+    environment:
+        - POSTGRES_PASSWORD=cumbaya
+        - POSTGRES_DB=truesize_test 
 
 go:
     build: .
@@ -26,5 +36,6 @@ admin:
     restart: always
     links: 
         - postgresdb
+        - postgresdbtest
     ports:
         - 8081:8080
