@@ -1,8 +1,8 @@
 {
 	"local": {
 		"driver": "postgres",
-		"host": "localhost",
-		"user": "truesizeuser",
+		"host": "postgresdb",
+		"user": "postgres",
 		"password": "cumbaya",
 		"dbname": "truesize",
 		"dbport": "5432",
@@ -10,8 +10,8 @@
 	},
 	"tests": {
 		"driver": "postgres",
-		"host": "localhost",
-		"user": "truesizeuser",
+		"host": "postgresdb",
+		"user": "postgres",
 		"password": "cumbaya",
 		"dbname": "truesize_test",
 		"dbport": "5432",
