@@ -5,12 +5,12 @@ func main() {
 	a := App{}
 	a.SetConfig()
 
-    a.Initialize(
-    	a.Config.Local.Host, 
-    	a.Config.Local.User, 
-    	a.Config.Local.Password, 
-    	a.Config.Local.DbName,
-    	a.Config.Local.DbPort)
+	a.Initialize(
+		a.Config.Local.Host,
+		a.Config.Local.DbPort,
+		a.Config.Local.User,
+		a.Config.Local.Password,
+		a.Config.Local.DbName)
 
-    a.Run(a.Config.Local.ApiPort)
+	a.Run(a.Config.Local.ApiPort)
 }

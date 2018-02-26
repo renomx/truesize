@@ -53,9 +53,11 @@ func (s *Shoe) GetShoes(db *gorm.DB) ([]SimpleShoe, error) {
     return simpleShoes, nil
 }
 
-func (s *Shoe) GetShoe(db *gorm.DB, id int) (SimpleShoe, error) {
+func (s *Shoe) GetShoe(db *gorm.DB, shoeName string) (SimpleShoe, error) {
 
-    return mapToSimpleShoe(db, id), nil
+    shoe := Shoe{}
+    db.Where("name=?", shoeName).Find(&shoe)
+    return mapToSimpleShoe(db, int(shoe.ID)), nil
 }   
 
 func (s *SimpleShoe) CreateShoe(db *gorm.DB) (SimpleShoe, error) {
