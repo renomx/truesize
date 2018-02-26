@@ -7,8 +7,6 @@ func main() {
 	a := App{}
 	a.SetConfig()
 
-	log.Println(a.Config)
-
     a.Initialize(
     	a.Config.Local.Host, 
     	a.Config.Local.User, 
