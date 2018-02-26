@@ -1,9 +1,13 @@
 package main
 
+import "log"
+
 func main() {
 	// Initialize App
 	a := App{}
 	a.SetConfig()
+
+	log.Println(a.Config)
 
     a.Initialize(
     	a.Config.Local.Host, 
