@@ -34,10 +34,11 @@ func (a *App) SetConfig() {
 func (a *App) Initialize(host, port, user, password, dbname string) {
 	connectionString :=
 		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-			host, port, user, password, dbname)	
+			host, port, user, password, dbname)
 
-	a.DB, err := gorm.Open("postgres", connectionString);	
-	if  err != nil {		
+	var err error
+	a.DB, err = gorm.Open("postgres", connectionString)
+	if err != nil {
 		dbReady = false
 	} else {
 		a.Model.InitModel(a.DB)
