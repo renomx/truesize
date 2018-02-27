@@ -25,6 +25,8 @@ type App struct {
 	View   *models.SimpleShoe
 }
 
+var dbReady bool
+
 func (a *App) SetConfig() {
 	a.Config = config.GetConfig()
 }
@@ -37,11 +39,12 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 	var err error
 
 	if a.DB, err = gorm.Open("postgres", connectionString); err != nil {
-		log.Printf("%s, %s, %s, %s, %s", host, port, user, password, dbname)
-		log.Fatal(err)
+		log.Println(err)
+		dbReady = false
+	} else {
+		a.Model.InitModel(a.DB)
+		dbReady = true
 	}
-
-	a.Model.InitModel(a.DB)
 
 	a.InitializeRoutes()
 }
@@ -49,11 +52,16 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 func (a *App) InitializeRoutes() {
 
 	a.Router = mux.NewRouter()
-	a.Router.HandleFunc("/", a.sayHello).Methods("GET")
-	a.Router.HandleFunc("/shoe", a.getShoes).Methods("GET")
-	a.Router.HandleFunc("/shoe/{shoename}", a.getShoe).Methods("GET")
-	a.Router.HandleFunc("/shoe", a.createShoe).Methods("POST")
-	a.Router.HandleFunc("/shoe/truetosize/{shoename}", a.addTrueToSize).Methods("PUT")
+
+	if dbReady {
+		a.Router.HandleFunc("/", a.sayHello).Methods("GET")
+		a.Router.HandleFunc("/shoe", a.getShoes).Methods("GET")
+		a.Router.HandleFunc("/shoe/{shoename}", a.getShoe).Methods("GET")
+		a.Router.HandleFunc("/shoe", a.createShoe).Methods("POST")
+		a.Router.HandleFunc("/shoe/truetosize/{shoename}", a.addTrueToSize).Methods("PUT")
+	} else {
+		a.Router.HandleFunc("/", a.dbNotReady).Methods("GET")
+	}
 	log.Println("Initializing routes")
 }
 
@@ -75,6 +83,24 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 /***** HANDLERS ****/
+
+func (a *App) dbNotReady(w http.ResponseWriter, r *http.Request) {
+	text := "Seems like our database is not ready yet, please try again in a few moments"
+	anonymousStruct := struct {
+		Message string
+	}{
+		text,
+	}
+
+	a.Initialize(
+		a.Config.Local.Host,
+		a.Config.Local.DbPort,
+		a.Config.Local.User,
+		a.Config.Local.Password,
+		a.Config.Local.DbName)
+
+	respondWithJSON(w, http.StatusOK, anonymousStruct)
+}
 
 func (a *App) sayHello(w http.ResponseWriter, r *http.Request) {
 
