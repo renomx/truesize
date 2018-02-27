@@ -37,6 +37,7 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 	var err error
 
 	if a.DB, err = gorm.Open("postgres", connectionString); err != nil {
+		log.Printf("%s, %s, %s, %s, %s", host, port, user, password, dbname)
 		log.Fatal(err)
 	}
 

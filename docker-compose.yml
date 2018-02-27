@@ -1,25 +1,10 @@
-store:
-    image: postgres:latest 
-    volumes:
-        - /var/lib/postgresql/data
-    command: "true"
-
 postgresdb:
     image: postgres:latest
     ports:
         - "5432:5432" 
-    volumes_from:
-        - store 
     environment:
         - POSTGRES_PASSWORD=cumbaya
         - POSTGRES_DB=truesize  
-
-go:
-    build: .
-    links:
-        - postgresdb
-    ports:
-        - "8080:8080"
 
 admin:
     image: adminer
@@ -28,3 +13,10 @@ admin:
         - postgresdb
     ports:
         - 8081:8080
+
+go:
+    build: .
+    links:
+        - postgresdb
+    ports:
+        - "8080:8080"
