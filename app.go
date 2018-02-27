@@ -36,7 +36,7 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			host, port, user, password, dbname)	
 
-	a.DB, err := gorm.Open("postgres", connectionString);
+	a.DB, err := gorm.Open("postgres", connectionString);	
 	if  err != nil {		
 		dbReady = false
 	} else {
