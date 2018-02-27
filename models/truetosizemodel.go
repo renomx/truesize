@@ -102,10 +102,6 @@ func (s *Shoe) deleteShoe(db *gorm.DB) error {
 	return errors.New("not implemented")
 }
 
-func (s *Shoe) calculateTrueToSize(db *gorm.DB) error {
-	return errors.New("not implemented")
-}
-
 func mapToSimpleShoe(db *gorm.DB, id int) SimpleShoe {
 
 	simpleShoe := SimpleShoe{}

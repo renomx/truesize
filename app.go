@@ -78,12 +78,26 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 
 func (a *App) sayHello(w http.ResponseWriter, r *http.Request) {
 
-	text := "Hola"
+	text := "Welcome to True to Size Value"
 
 	anonymousStruct := struct {
-		Message string
+		Message            string
+		ListOfShoes        string
+		SpecificShoe       string
+		CreateShoe         string
+		AddTrueToSizeValue string
+		ToDos              []string
 	}{
 		text,
+		"/shoe - GET",
+		"/shoe/{shoename} - GET",
+		"/shoe - POST",
+		"/shoe/truetosize/{shoename} - PUT",
+		[]string{
+			"Complete tests configuration",
+			"Add Swagger or some sort of documentation",
+			"Implement delete shoe",
+		},
 	}
 	respondWithJSON(w, http.StatusOK, anonymousStruct)
 }
