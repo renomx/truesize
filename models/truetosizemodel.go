@@ -30,7 +30,8 @@ type Size struct {
 
 func (s *Shoe) InitModel(db *gorm.DB) error {
 
-	db.DropTableIfExists(&Shoe{}, &Size{})
+	//ToDo: move this functionality to the tests
+	//db.DropTableIfExists(&Shoe{}, &Size{})
 
 	db.AutoMigrate(&Shoe{}, &Size{})
 
