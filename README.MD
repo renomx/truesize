@@ -20,3 +20,6 @@ You can run the project localy or using docker-compose up.
 ### Known issues
 * Gorm doesn't like mappings to json so that had to be done manually
 * Sometimes Postgres stops allowing connections when running on Docker, this could be because I am using it on a VM but haven't figured out why
+
+### ToDo
+* Configure the tests to run from the test directory, otherwise, the file has to be moved to the root of the project.
