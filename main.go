@@ -11,6 +11,4 @@ func main() {
 		a.Config.Local.User,
 		a.Config.Local.Password,
 		a.Config.Local.DbName)
-
-	a.Run(a.Config.Local.ApiPort)
 }

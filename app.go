@@ -8,9 +8,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/renomx/truesize/config"
-	"github.com/renomx/truesize/models"
-
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -18,15 +15,15 @@ import (
 )
 
 type App struct {
-	Config *config.Config
+	Config *Config
 	Router *mux.Router
 	DB     *gorm.DB
-	Model  *models.Shoe
-	View   *models.SimpleShoe
+	Model  *Shoe
+	View   *SimpleShoe
 }
 
 func (a *App) SetConfig() {
-	a.Config = config.GetConfig()
+	a.Config = GetConfig()
 }
 
 func (a *App) Initialize(host, port, user, password, dbname string) {
@@ -35,25 +32,30 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 			host, port, user, password, dbname)
 
 	var err error
-
-	if a.DB, err = gorm.Open("postgres", connectionString); err != nil {
-		log.Printf("%s, %s, %s, %s, %s", host, port, user, password, dbname)
+	a.DB, err = gorm.Open("postgres", connectionString)
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	a.Model.InitModel(a.DB)
+	defer a.DB.Close()
 
 	a.InitializeRoutes()
+
+	a.Run(a.Config.Local.ApiPort)
 }
 
 func (a *App) InitializeRoutes() {
 
 	a.Router = mux.NewRouter()
+
 	a.Router.HandleFunc("/", a.sayHello).Methods("GET")
 	a.Router.HandleFunc("/shoe", a.getShoes).Methods("GET")
 	a.Router.HandleFunc("/shoe/{shoename}", a.getShoe).Methods("GET")
 	a.Router.HandleFunc("/shoe", a.createShoe).Methods("POST")
 	a.Router.HandleFunc("/shoe/truetosize/{shoename}", a.addTrueToSize).Methods("PUT")
+
+	a.Router.HandleFunc("/error", a.dbNotReady).Methods("GET")
+
 	log.Println("Initializing routes")
 }
 
@@ -75,6 +77,24 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 /***** HANDLERS ****/
+
+func (a *App) dbNotReady(w http.ResponseWriter, r *http.Request) {
+	text := "Seems like our database is not ready yet, please try again in a few moments"
+	anonymousStruct := struct {
+		Message string
+	}{
+		text,
+	}
+
+	a.Initialize(
+		a.Config.Local.Host,
+		a.Config.Local.DbPort,
+		a.Config.Local.User,
+		a.Config.Local.Password,
+		a.Config.Local.DbName)
+
+	respondWithJSON(w, http.StatusOK, anonymousStruct)
+}
 
 func (a *App) sayHello(w http.ResponseWriter, r *http.Request) {
 
@@ -118,7 +138,7 @@ func (a *App) getShoe(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	shoeName := vars["shoename"]
-	s := models.Shoe{}
+	s := Shoe{}
 
 	shoe, err := s.GetShoe(a.DB, shoeName)
 	if err != nil {
@@ -131,7 +151,7 @@ func (a *App) getShoe(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) createShoe(w http.ResponseWriter, r *http.Request) {
 
-	var shoe = models.SimpleShoe{}
+	var shoe = SimpleShoe{}
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&shoe); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
@@ -159,7 +179,7 @@ func (a *App) addTrueToSize(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	shoeName := vars["shoename"]
 
-	var shoe = models.Shoe{}
+	var shoe = Shoe{}
 
 	bodyBytes, err := ioutil.ReadAll(r.Body)
 	m := make(map[string]int)
